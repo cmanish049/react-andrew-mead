@@ -1,52 +1,96 @@
-const app = {
-    title: 'Indecision App',
-    subtitle: 'Put your life in hands of a computer',
-    options: ['One', 'Two'],
+class IndecisionApp extends React.Component {
+    render() {
+        const title = 'Indecision App';
+        const subtitle = "Put your life in hand of computer";
+        const options = ['Option 1', 'Option 2'];
+        return (
+            <div>
+                <Header title={title} subtitle={subtitle} />
+                <Action />
+                <Options options={options} />
+                <AddOption />
+            </div>
+        );
+    };
+};
+class Header extends React.Component {
+    render() {
+        return (
+            <div>
+                <h1>{this.props.title}</h1>
+                <h2>{this.props.subtitle}</h2>
+            </div>
+        );
+    }
 }
-const template = (
-    <div>
-        <h1>{app.title}</h1>
-        <p></p>
-        {app.subtitle && <p>{app.subtitle}</p>}
-        <ol>
-            <li>Item one</li>
-            <li>Item two</li>
-        </ol>
-    </div>
-    
-)
 
-let count = 0;
-const addOne = () => {
-    count++;
-    console.log('plus one' + count)
-    renderCounterApp();
-};
+class Action extends React.Component {
+    handlePick() {
+        alert('Handle Pick');
+    }
 
-const minusOne = () => {
-    count--;
-    console.log('minus one' + count)
-    renderCounterApp();
-};
+    render() {
+        return (
+            <div>
+                <button onClick={this.handlePick}>What should I do?</button>
+            </div>
+        );
+    }
+}
 
-const reset = () => {
-    count = 0;
-    console.log('reset' + count)
-    renderCounterApp();
-};
+class Options extends React.Component {
 
-var appRoot = document.getElementById('app');
+    constructor(props) {
+        super(props);
+        // method binding
+        this.handleRemoveAll = this.handleRemoveAll.bind(this);
+    }
 
-const renderCounterApp = () => {
-    const templateTwo = (
-        <div>
-            <h1>Count {count}</h1>
-            <button id="my-id" className="button" onClick={addOne}>+1</button>
-            <button className="button" onClick={minusOne}>-1</button>
-            <button className="button" onClick={reset}>reset</button>
-        </div>
-        
-    )
-    ReactDOM.render(templateTwo, appRoot);
-};
-renderCounterApp();
+    //event methods
+    handleRemoveAll() {
+        console.log(this.props.options);
+    }
+    render() {
+        return (
+            <div>
+                <p>{this.props.options.length}</p>
+                <button onClick={this.handleRemoveAll}>Remove All</button>
+                <ol>
+                    {
+                        this.props.options.map((option) => <Option optionText={option} />)
+                    }
+                </ol>
+            </div>
+
+        );
+    }
+}
+
+class Option extends React.Component {
+    render() {
+        return (
+            <li>{this.props.optionText}</li>
+        );
+    }
+}
+
+class AddOption extends React.Component {
+    handleAddOption(e) {
+        e.preventDefault()
+        const option = e.target.elements.option.value;
+        if (option)
+            alert(option);
+    }
+    render() {
+        return (
+            <div>
+                <form onSubmit={this.handleAddOption}>
+                    <input type="text" name="option"></input>
+                    <button>Add Option</button>
+                </form>
+            </div>
+        );
+    }
+}
+
+ReactDOM.render(<IndecisionApp />, document.getElementById('app'));
